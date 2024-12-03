@@ -6,10 +6,10 @@ import java.util.Scanner;
 public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     List<Process> processes = new ArrayList<>();
-    processes.add(new Process("P1", 0, 17, 4, "Red"));
-    processes.add(new Process("P2", 3, 6, 9, "Blue"));
-    processes.add(new Process("P3", 4, 10, 3, "Green"));
-    processes.add(new Process("P4", 29, 4, 8, "Yellow"));
+    processes.add(new Process("P1", 0, 17, 4, "Red",4));
+    processes.add(new Process("P2", 3, 6, 9, "Blue",3));
+    processes.add(new Process("P3", 4, 10, 3, "Green",5));
+    processes.add(new Process("P4", 29, 4, 8, "Yellow",2));
     for (Process process : processes) {
         System.out.println(process);
     }
@@ -39,7 +39,7 @@ public static void main(String[] args) {
 //    }
 
 
-    Scheduler scheduler = new SRTFSchedular();
+    Scheduler scheduler = new SRTFScheduler()   ;
     scheduler.schedule(processes);
 
     scanner.close();
