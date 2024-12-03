@@ -4,17 +4,12 @@ public class Process {
     private int burstTime;
     private int priority;
     private String color;
-    private int quantum;
+    int quantum;
     private double FCAIFactor;
     private int remainingBurstTime;
 
-    public void setRemainingBurstTime(int remainingBurstTime) {
-        this.remainingBurstTime = remainingBurstTime;
-    }
 
-    public int getRemainingBurstTime() {
-        return remainingBurstTime;
-    }
+
     public Process(String name, int arrivalTime, int burstTime, int priority, String color, int quantum) {
         setName(name);
         setArrivalTime(arrivalTime);
@@ -22,8 +17,15 @@ public class Process {
         setPriority(priority);
         setColor(color);
         setQuantum(quantum);
+        setRemainingBurstTime(burstTime);
     }
 
+    public int getRemainingBurstTime() {
+        return remainingBurstTime;
+    }
+    public void setRemainingBurstTime(int remainingBurstTime) {
+        this.remainingBurstTime = remainingBurstTime;
+    }
     public String getName() {
         return name;
     }
@@ -85,7 +87,7 @@ public class Process {
                 ", burstTime=" + burstTime +
                 ", priority=" + priority +
                 ", color='" + color + '\'' +
-                '}' + ",FCAI Factor= " + FCAIFactor;
+                '}';
     }
 
 }
