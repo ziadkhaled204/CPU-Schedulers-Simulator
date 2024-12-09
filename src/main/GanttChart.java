@@ -5,41 +5,47 @@ import java.util.List;
 class GanttChart extends JFrame {
 
     private final List<TimelineSegment> timeline;
+    private final String chartName; // Title for the chart
 
-    public GanttChart(List<TimelineSegment> timeline) {
+    public GanttChart(List<TimelineSegment> timeline, String chartName) {
         this.timeline = timeline;
+        this.chartName = chartName; // Set the chart name
         setTitle("Gantt Chart Visualization");
-        setSize(800, 200);
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         add(new GanttPanel());
     }
 
     class GanttPanel extends JPanel {
-        private int currentSegmentIndex = 0; // Track the segment being displayed
-
-        public GanttPanel() {
-            Timer timer = new Timer(1000, e -> {
-                if (currentSegmentIndex < timeline.size()) {
-                    currentSegmentIndex++; // Progressively display more segments
-                    repaint(); // Redraw the panel to show updated segments
-                } else {
-                    ((Timer) e.getSource()).stop(); // Stop the timer when all segments are displayed
-                }
-            });
-            timer.start(); // Start the timer
-        }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            int x = 10; // Initial X position
-            int y = 50; // Initial Y position
+            // Draw the chart title
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            FontMetrics metrics = g.getFontMetrics();
+            int titleWidth = metrics.stringWidth(chartName);
+            int titleX = (getWidth() - titleWidth) / 2; // Center title horizontally
+            int titleY = 30; // Position title slightly below the top
+            g.drawString(chartName, titleX, titleY);
 
-            // Draw segments up to the current index
-            for (int i = 0; i < currentSegmentIndex; i++) {
-                TimelineSegment segment = timeline.get(i);
+            // Calculate total width of the chart
+            int totalWidth = 0;
+            for (TimelineSegment segment : timeline) {
+                totalWidth += (segment.getEndTime() - segment.getStartTime()) * 20; // Scale time to width
+            }
+
+            // Get panel dimensions
+            int panelWidth = getWidth();
+            int panelHeight = getHeight();
+
+            // Calculate starting positions to center the chart
+            int x = (panelWidth - totalWidth) / 2;
+            int y = (panelHeight - 30) / 2 + 20; // Center vertically, adjust for title height
+
+            for (TimelineSegment segment : timeline) {
                 int width = (segment.getEndTime() - segment.getStartTime()) * 20; // Scale time to width
                 g.setColor(Color.decode(segment.getColor()));
                 g.fillRect(x, y, width, 30); // Draw filled rectangle

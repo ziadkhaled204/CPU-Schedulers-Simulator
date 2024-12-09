@@ -26,4 +26,5 @@ public class TimelineSegment {
     public String getColor() {
         return color;
     }
+
 }

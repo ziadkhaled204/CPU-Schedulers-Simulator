@@ -31,24 +31,18 @@ public class PriorityScheduler implements Scheduler {
             int waitingTime = Math.max(0, currentTime - process.getArrivalTime());
             int turnaroundTime = waitingTime + process.getBurstTime();
 
-            // Log execution history
-            int processIndex = processes.indexOf(process);
-            executionHistory.get(processIndex).add(currentTime);
-
             // If the process isn't the same as the last one, it means there's a context switch
             if (!process.getName().equals(prevProcessName)) {
                 if (prevProcessName != null) {
                     log.add("Time " + startTime + " -> " + currentTime + ": Executing: " + prevProcessName);
+                    timeline.add(new TimelineSegment(startTime ,currentTime,prevProcessName,process.getColor()));
                     contextSwitchTime += contextSwitchCost;  // Add context switch time
                 }
                 startTime = currentTime;
                 prevProcessName = process.getName();
             }
-
             // Simulate execution
             currentTime += process.getBurstTime();
-            executionHistory.get(processIndex).add(currentTime);
-
             totalWaitingTime += waitingTime;
             totalTurnaroundTime += turnaroundTime;
 
@@ -59,17 +53,18 @@ public class PriorityScheduler implements Scheduler {
 
         // Log the final execution of the last process
         log.add("Time " + startTime + " -> " + currentTime + ": Executing: " + prevProcessName);
+        String prevProcessColor = null;
+        for (Process p : processes)
+        {
+            if(prevProcessName.equals(p.getName()))
+            {
+                prevProcessColor = p.getColor();
+            }
+        }
+        timeline.add(new TimelineSegment(startTime ,currentTime,prevProcessName,prevProcessColor));
 
         // Print execution log
         log.forEach(System.out::println);
-
-        // Print execution history in the requested format
-        System.out.println("Execution History:");
-        for (int i = 0; i < processes.size(); i++) {
-            Process process = processes.get(i);
-            System.out.println(process.getName() + ": " + executionHistory.get(i));
-
-        }
 
         // Calculate and print average waiting and turnaround times
         double averageWaitingTime = (double) totalWaitingTime / processes.size();
